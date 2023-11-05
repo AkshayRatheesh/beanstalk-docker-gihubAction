@@ -1,0 +1,38 @@
+
+name: Deploy to AWS Elastic Beanstalk
+on:
+  push:
+    branches: [ main ]
+
+
+# Set up the environment variables
+env:
+  AWS_REGION: ap-south-1
+  EB_ENVIRONMENT: Tesign-env 
+  EB_APP: tesign
+   
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: AKIAYJ*********YI5U #${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: n0i48Y/yd3sYNRv***********2505p94nv #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+                
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: AKIAYJJZPL3YLLBXYI5U 
+          aws_secret_key: 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
+          application_name: ${{ env.EB_APP }} 
+          environment_name: ${{ env.EB_ENVIRONMENT }}
+          version_label: 12346
+          region: ${{ env.AWS_REGION }}
+          deployment_package: docker.zip
